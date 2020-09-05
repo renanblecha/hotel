@@ -1,0 +1,79 @@
+version: '3.5'
+
+services:
+
+  # LARAVEL
+  hotel:
+    container_name: hotel
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+      args:
+        - uid=$UID
+    ports:
+      - 8000:8000
+    depends_on:
+      - hotel_redis
+      - hotel_mariadb
+    networks:
+      - hotel
+    volumes:
+      - ./src:/var/www
+
+  #DB MARIADB
+  hotel_mariadb:
+    image: mariadb:latest
+    container_name: hotel_mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=hotel
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    command: --sql_mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    volumes:
+      - hotel_mariadb_data:/hotel_mariadb
+    ports:
+      - 3306:3306
+    networks:
+      - hotel
+
+  #PHPMYADMIN
+  hotel_phpmyadmin:
+    build:
+      context: ./
+      dockerfile: docker/phpmyadmin/Dockerfile
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: hotel_phpmyadmin
+    depends_on:
+      - hotel_mariadb
+    links:
+      - hotel_mariadb
+    ports:
+      - 8001:80
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - PMA_HOST=hotel_mariadb
+    networks:
+      - hotel
+
+  # Redis cache
+  hotel_redis:
+    container_name: hotel_redis
+    image: redis:latest
+    volumes:
+      - hotel_redis_data:/hotel_redis
+    ports:
+      - 6379:6379
+    networks:
+      - hotel
+
+volumes:
+  hotel_redis_data:
+  hotel_mariadb_data:
+    driver: local
+
+networks:
+  hotel:
+    name: hotel

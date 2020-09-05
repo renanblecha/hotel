@@ -1,0 +1,32 @@
+#!/bin/bash
+
+NC='\033[0m' # No Color
+GREEN='\033[1;32m'
+WHITE='\033[1;37m'
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+
+#Export User ID
+printf "\n${RED}*Starting All Containers${WHITE}\n"
+export UID
+
+#Building Projects
+printf "\n${GREEN}*Uploading Application Container${WHITE}\n"
+docker-compose up -d --build
+
+#Composer Install on hotel
+printf "\n${GREEN}*Composer Install on hotel${WHITE}\n"
+docker exec -i hotel composer install
+
+printf "\n${GREEN}*Copying the configuration example file of hotel .env.example${WHITE}\n"
+docker exec -i hotel cp .env.example .env
+
+#Key Generate on hotel
+printf "\n${GREEN}*Generate Key hotel${WHITE}\n"
+docker exec -i hotel php artisan key:generate
+
+#INFORMATION
+printf "\n${GREEN}*Information Containers Uploaded ${WHITE}\n\n"
+docker ps -a
+
+printf "\n\n"
