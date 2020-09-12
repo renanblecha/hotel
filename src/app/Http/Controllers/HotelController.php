@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Pessoa;
-use App\UserRole;
+use App\Hotel;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -15,8 +14,8 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $registros = Pessoa::paginate(3);
-        return view('paginas.pessoa.index', compact('registros'));
+        $registros = Hotel::paginate(3);
+        return view('paginas.hotel.index', compact('registros'));
     }
 
     /**
@@ -26,7 +25,7 @@ class HotelController extends Controller
      */
     public function create()
     {
-        return view('paginas.pessoa.adicionar');
+        return view('paginas.hotel.adicionar');
     }
 
     /**
@@ -38,25 +37,23 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|regex:/^[a-zA-Z]+$/u',
-            'sobrenome' => 'required|regex:/^[a-zA-Z]+$/u',
-            'identificacao' => 'required|min:11|max:11|regex:/^[0-9]+$/u'
+            'nome' => 'required|regex:/^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
         ]);
 
         $dados = $request->all();
 
-        Pessoa::create($dados);
+        Hotel::create($dados);
 
-        return redirect()->route('reservas.pessoa');
+        return redirect()->route('gerencia.hotel');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Pessoa  $pessoa
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Pessoa $pessoa)
+    public function show(int $id)
     {
         //
     }
@@ -64,46 +61,44 @@ class HotelController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Pessoa  $pessoa
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pessoa $pessoa)
+    public function edit(int $id)
     {
-        $registro = Pessoa::find($pessoa->id);
-        return view('paginas.pessoa.editar', compact('registro'));
+        $registro = Hotel::find($id);
+        return view('paginas.hotel.editar', compact('registro'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pessoa  $pessoa
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pessoa $pessoa)
+    public function update(Request $request, int $id)
     {
         $request->validate([
-            'nome' => 'required|regex:/^[a-zA-Z]+$/u',
-            'sobrenome' => 'required|regex:/^[a-zA-Z]+$/u',
-            'identificacao' => 'required|min:11|max:11|regex:/^[0-9]+$/u'
+            'nome' => 'required|regex:/^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
         ]);
 
         $dados = $request->all();
 
-        Pessoa::find($pessoa->id)->update($dados);
+        Hotel::find($id)->update($dados);
 
-        return redirect()->route('reservas.pessoa');
+        return redirect()->route('gerencia.hotel');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Pessoa  $pessoa
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pessoa $pessoa)
+    public function destroy(int $id)
     {
-        Pessoa::find($pessoa->id)->delete();
-        return redirect()->route('reservas.pessoa');
+        Hotel::find($id)->delete();
+        return redirect()->route('gerencia.hotel');
     }
 }

@@ -11,7 +11,7 @@ class Pessoa extends Model
     use TracksCreatorAndUpdater;
 
     protected $fillable = [
-        'identificacao','sobrenome','nome','nascimento','nascimento_decorator','email','telefone','created_by','updated_by'
+        'identificacao','sobrenome','nome','nascimento','nascimento_decorator','email','telefone','user_id','created_by','updated_by'
     ];
 
     protected $appends = ['eh_idoso'];
@@ -33,7 +33,7 @@ class Pessoa extends Model
     public function setIdentificacaoAttribute($value) {
         $this->attributes['identificacao'] = preg_replace( '/[^0-9]/', '', $value);
     }
-    
+
     public function setNomeAttribute($value) {
         $this->attributes['nome'] = strtoupper($value);
     }

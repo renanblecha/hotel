@@ -16,11 +16,12 @@ class CreateQuartosTable extends Migration
         Schema::create('quartos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('imagem');
-            $table->integer('quantidade');
-            $table->enum('categoria',['standard','executivo','deluxe','solteiro','solteiro_duplo'])->default('standard');
-            $table->unsignedBigInteger('hotel_id')->nullable()->index();
-            $table->foreign('hotel_id')->references('id')->on('hotels');
+            $table->string('imagem')->nullable();
+//            $table->integer('quantidade');
+//            $table->unsignedBigInteger('categoria_id')->nullable()->index();
+//            $table->unsignedBigInteger('hotel_id')->nullable()->index();
+//            $table->foreign('hotel_id')->references('id')->on('hotels');
+//            $table->foreign('categoria_id')->references('id')->on('hotels');
             $table->timestamps();
         });
     }

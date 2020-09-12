@@ -11,6 +11,6 @@ class PessoaSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Pessoa::class, 50)->create();
+//        factory(App\Pessoa::class, 50)->create();
     }
 }

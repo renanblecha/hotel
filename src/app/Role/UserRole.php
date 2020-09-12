@@ -62,19 +62,9 @@ class UserRole {
         }
     }
 
-    public static function getRoleName($user)
+    public static function getRoleName($role)
     {
         $roles = self::getRoleList();
-        if ($user->is_admin){
-            return $roles[static::ROLE_ADMIN];
-        }elseif ($user->is_gerente){
-            return $roles[static::ROLE_GERENTE];
-        }elseif ($user->is_funcionario){
-            return $roles[static::ROLE_FUNCIONARIO];
-        }elseif ($user->is_agente){
-            return $roles[static::ROLE_AGENTE];
-        }else{
-            return $roles[static::ROLE_HOSPEDE];
-        }
+        return $roles[$role];
     }
 }

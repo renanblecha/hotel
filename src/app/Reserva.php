@@ -2,18 +2,39 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class Reserva extends Model
 {
     protected $fillable = [
-        'data_fim','data_inicio','quarto_id','pessoa_id','user_id',
+        'data_fim','data_inicio','hotels_has_quartos_has_categoria_id','pessoa_id','user_id',
     ];
 
     protected $dates = [
         'data_fim','data_inicio',
     ];
+
+    public function setDataInicioDecoratorAttribute($value)
+    {
+        $this->attributes['data_inicio'] = Carbon::createFromFormat(config('app.date_format'), $value)->format(config('app.date_format_db'));
+    }
+
+    public function getDataInicioDecoratorAttribute()
+    {
+        return Carbon::parse($this->attributes['data_inicio'])->format(config('app.date_format'));
+    }
+
+    public function setDataFimDecoratorAttribute($value)
+    {
+        $this->attributes['data_fim'] = Carbon::createFromFormat(config('app.date_format'), $value)->format(config('app.date_format_db'));
+    }
+
+    public function getDataFimDecoratorAttribute()
+    {
+        return Carbon::parse($this->attributes['data_fim'])->format(config('app.date_format'));
+    }
 
     public static function validar($data)
     {
@@ -37,11 +58,11 @@ class Reserva extends Model
         }
         return true;
     }
-    
+
     /**Quarto de hotel reservado. */
-    public function quarto()
+    public function hotelsHasQuartosHasCategoria()
     {
-        return $this->belongsTo('App\Quarto');
+        return $this->belongsTo('App\HotelsHasQuartosHasCategoria');
     }
 
     /**Hóspede da reserva. */
@@ -54,5 +75,5 @@ class Reserva extends Model
     public function usuario()
     {
         return $this->belongsTo('App\User');
-    } 
+    }
 }

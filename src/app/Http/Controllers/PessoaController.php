@@ -87,7 +87,7 @@ class PessoaController extends Controller
             'sobrenome' => 'required|regex:/^[a-zA-Z]+$/u',
             'identificacao' => 'required|min:11|max:11|regex:/^[0-9]+$/u'
         ]);
-        
+
         $dados = $request->all();
 
         Pessoa::find($pessoa->id)->update($dados);

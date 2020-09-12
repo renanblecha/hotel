@@ -14,7 +14,8 @@ class QuartoController extends Controller
      */
     public function index()
     {
-        //
+        $registros = Quarto::paginate(3);
+        return view('paginas.quarto.index', compact('registros'));
     }
 
     /**
@@ -24,7 +25,7 @@ class QuartoController extends Controller
      */
     public function create()
     {
-        //
+        return view('paginas.quarto.adicionar');
     }
 
     /**
@@ -35,16 +36,24 @@ class QuartoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nome' => 'required|regex:/^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
+        ]);
+
+        $dados = $request->all();
+
+        Quarto::create($dados);
+
+        return redirect()->route('gerencia.quarto');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Quarto  $quarto
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Quarto $quarto)
+    public function show(int $id)
     {
         //
     }
@@ -52,34 +61,44 @@ class QuartoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Quarto  $quarto
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Quarto $quarto)
+    public function edit(int $id)
     {
-        //
+        $registro = Quarto::find($id);
+        return view('paginas.quarto.editar', compact('registro'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Quarto  $quarto
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quarto $quarto)
+    public function update(Request $request, int $id)
     {
-        //
+        $request->validate([
+            'nome' => 'required|regex:/^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
+        ]);
+
+        $dados = $request->all();
+
+        Quarto::find($id)->update($dados);
+
+        return redirect()->route('gerencia.quarto');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Quarto  $quarto
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quarto $quarto)
+    public function destroy(int $id)
     {
-        //
+        Quarto::find($id)->delete();
+        return redirect()->route('gerencia.quarto');
     }
 }

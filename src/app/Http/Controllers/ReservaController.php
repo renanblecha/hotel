@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HotelsHasQuartosHasCategoria;
+use App\Pessoa;
 use App\Reserva;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class ReservaController extends Controller
 {
@@ -14,7 +19,8 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        //
+        $registros = Reserva::paginate(3);
+        return view('paginas.reserva.index', compact('registros'));
     }
 
     /**
@@ -24,7 +30,9 @@ class ReservaController extends Controller
      */
     public function create()
     {
-        //
+        $hospedes = Pessoa::all();
+        $hotels_has_quartos_has_categorias = HotelsHasQuartosHasCategoria::all();
+        return view('paginas.reserva.adicionar', compact(['hospedes','hotels_has_quartos_has_categorias']));
     }
 
     /**
@@ -35,51 +43,34 @@ class ReservaController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate(
+            [
+                'pessoa_id' => 'required|integer',
+                'hotels_has_quartos_has_categoria_id' => 'required|integer',
+                'data_inicio' => 'required|date_format:Y-m-d',
+                'data_fim' => 'required|date_format:Y-m-d',
+            ]
+        );
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Reserva  $reserva
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Reserva $reserva)
-    {
-        //
-    }
+        $dados = $request->all();
+        $dados['user_id'] = Auth::user()->id;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reserva  $reserva
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reserva $reserva)
-    {
-        //
-    }
+        Reserva::create($dados);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Reserva  $reserva
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Reserva $reserva)
-    {
-        //
+        Log::info("Reserva efetuada com sucesso pelo usuário #".$dados["user_id"]." para o hóspede #".$dados["pessoa_id"]);
+
+        return redirect()->route('gerencia.reserva');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Reserva  $reserva
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reserva $reserva)
+    public function destroy(int $id)
     {
-        //
+        $registro = Reserva::find($id)->delete();
+        return redirect()->route('gerencia.reserva');
     }
 }

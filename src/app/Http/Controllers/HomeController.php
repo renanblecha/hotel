@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if(Auth::user()->is_gerente){
+            return redirect()->route('gerencia.home');
+        }
         return view('home');
     }
 
@@ -34,15 +38,5 @@ class HomeController extends Controller
     public function gerencia()
     {
         return view('home_gerencia');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function hospede()
-    {
-        return view('hospede');
     }
 }

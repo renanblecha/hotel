@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Role\UserRole;
 use App\User;
-use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+
     /**
-     * Create a new controller instance.
+     * Display a listing of the resource.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      */
-    public function __construct()
+    public function index()
     {
-        $this->middleware('auth');
+        $registros = User::paginate(3);
+        return view('paginas.usuario.index', compact('registros'));
     }
 
     public function showAdminRegistrationForm()
@@ -27,22 +30,14 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    protected function create()
+    public function create()
     {
+        $roles = UserRole::getAdminRoleList(Auth::user());
+        return view('paginas.usuario.adicionar', compact('roles'));
     }
 
     /**
@@ -68,16 +63,16 @@ class UserController extends Controller
             'roles' => $data['roles'],
         ]);
 
-        return redirect()->route('home');
+        return redirect()->route('admin.usuario');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(int $id)
     {
         //
     }
@@ -85,22 +80,25 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(int $id)
     {
-        //
+        $registro = User::find($id);
+        $roles = UserRole::getAdminRoleList(Auth::user());
+        dd($registro);
+        return view('paginas.usuario.editar', compact(['roles','registro']));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -108,10 +106,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(int $id)
     {
         //
     }

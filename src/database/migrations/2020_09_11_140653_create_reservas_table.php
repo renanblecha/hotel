@@ -17,9 +17,9 @@ class CreateReservasTable extends Migration
             $table->id();
             $table->date('data_inicio');
             $table->date('data_fim');
-            $table->unsignedBigInteger('quarto_id')->nullable()->index();
-            $table->foreign('quarto_id')->references('id')->on('quartos');
-            $table->unsignedBigInteger('pessoa_id')->nullable()->index();
+            $table->unsignedBigInteger('hotels_has_quartos_has_categoria_id')->index();
+            $table->foreign('hotels_has_quartos_has_categoria_id')->references('id')->on('hotels_has_quartos_has_categorias');
+            $table->unsignedBigInteger('pessoa_id')->index();
             $table->foreign('pessoa_id')->references('id')->on('pessoas');
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->foreign('user_id')->references('id')->on('users');

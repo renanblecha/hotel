@@ -51,7 +51,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} ({{ \App\Role\UserRole::getRoleName(Auth::user()) }})
+                                    {{ Auth::user()->name }} ({{ \App\Role\UserRole::getRoleName(Auth::user()->roles[0]) }})
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -72,12 +72,10 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            @if(Auth::user()->is_gerente)
-                @component("layouts._includes.menu")
-                @endcomponent
-            @endif
+        @component("layouts._includes.menu")
+        @endcomponent
 
+        <main class="py-4">
             @yield('content')
         </main>
     </div>

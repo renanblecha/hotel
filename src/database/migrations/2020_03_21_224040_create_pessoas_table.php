@@ -24,10 +24,10 @@ class CreatePessoasTable extends Migration
             $table->string('telefone')->nullable();
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by'); 
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');           
+            $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Pessoa;
 use App\Providers\RouteServiceProvider;
+use App\Role\UserRole;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -50,9 +52,18 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'identificacao' => [
+                'required',
+                'min:11',
+                'max:11',
+                'regex:/^[0-9]+$/u',
+                'unique:pessoas'
+            ],
+            'nome' => 'required|regex:/^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
+            'sobrenome' => 'required|regex:/^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
+            'email' => 'required|email|unique:pessoas|unique:users',
+            'nascimento' => 'required|date_format:Y-m-d',
+            'password' => ['required', 'string', 'confirmed'],
         ]);
     }
 
@@ -64,10 +75,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $data['name'] = $data['nome'].' '.$data['sobrenome'];
+        $data['created_by'] = null;
+        $data['updated_by'] = null;
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'roles' => [UserRole::ROLE_HOSPEDE],
         ]);
+
+        $data['user_id'] = $user->id;
+
+        $pessoa = Pessoa::create($data);
+
+        return $user;
     }
 }
