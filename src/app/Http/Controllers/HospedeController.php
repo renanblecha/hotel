@@ -51,7 +51,7 @@ class HospedeController extends Controller
             'nome' => 'required|regex:/^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
             'sobrenome' => 'required|regex:/^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ -]+$/u',
             'email' => 'required|email|unique:pessoas|unique:users',
-            'nascimento' => 'date_format:Y-m-d',
+            'nascimento' => 'required|date_format:Y-m-d',
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
         ]);
@@ -112,7 +112,7 @@ class HospedeController extends Controller
                 Rule::unique('pessoas')->ignore($pessoa->id),
                 Rule::unique('users')->ignore($pessoa->user_id),
             ],
-            'nascimento' => 'date_format:Y-m-d',
+            'nascimento' => 'required|date_format:Y-m-d',
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
         ]);

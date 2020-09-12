@@ -43,9 +43,9 @@
     </div>
 
     <div class="col-md-4">
-        <label class="control-label" for="nascimento_decorator">{{__("Date of Birthday")}}</label>
-        <input type="text" class="form-control" id="nascimento_decorator" name="nascimento_decorator" placeholder="{{__("Date of Birthday")}}"
-               value="{{old('nascimento_decorator',$registro->nascimento_decorator ?? '') }}">
+        <label class="control-label" for="nascimento">{{__("Date of Birthday")}}</label>
+        <input type="date" class="form-control" id="nascimento" name="nascimento" placeholder="{{__("Date of Birthday")}}"
+               value="{{old('nascimento',$registro->nascimento ?? '') }}">
     </div>
 </div>
 
